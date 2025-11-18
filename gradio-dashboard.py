@@ -12,7 +12,7 @@ from langchain_chroma import Chroma
 load_dotenv()
 
 books = pd.read_csv('books_with_emotions.csv')
-books["large_thumbnail"] = books["large_thumbnail"].str.concat("&fife=w800")
+books["large_thumbnail"] = books["large_thumbnail"]+ "&fife=w800"
 books["large_thumbnail"] = np.where(books["large_thumbnail"].isnull(), "cover-not-found.jpg", books["large_thumbnail"])
 
 raw_documents = TextLoader("tagged_description.txt").load()
