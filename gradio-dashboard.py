@@ -18,7 +18,9 @@ books["large_thumbnail"] = np.where(books["large_thumbnail"].isnull(), "cover-no
 raw_documents = TextLoader("tagged_description.txt").load()
 text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_overlap = 0)
 documents = text_splitter.split_documents(raw_documents)
-db_books = Chroma.from_documents(documents, OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None)))
+db_books = Chroma.from_documents(documents,
+                                OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None)),
+                                persist_directory="chroma_book_db")
 
 
 def retrieve_semantic_recommendations(
@@ -74,7 +76,7 @@ def recommend_books(query: str, category: str, tone: str):
             authors_str = row["authors"]
 
         caption = f"{row['title']} by {authors_str}: {truncated_description}"
-        results.append((row["large_thumbnail"]), caption)
+        results.append((row["large_thumbnail"], caption))
     return results
 
 
