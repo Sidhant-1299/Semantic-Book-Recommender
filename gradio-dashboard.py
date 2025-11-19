@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
 import os
-from langchain_community.document_loaders import CSVLoader, TextLoader
+from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_chroma import Chroma
