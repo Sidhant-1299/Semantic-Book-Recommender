@@ -1,7 +1,22 @@
 stages:
+  data_ingestion:
+    cmd: uv run src/data/data_ingestion.py
+    deps:
+    - data/raw/books.csv
+    outs:
+    - data/interim/books_with_categories.csv
   data_preprocessing:
     cmd: uv run src/data/data_preprocessing.py
     deps: 
-    - data/raw/books.csv
+    - data/interim/books_with_categories.csv
+    outs:
+    - data/final/tagged_description.txt
+  sentiment_analyzer:
+    cmd: uv run src/data/sentiment_analyzer.py
+    deps:
+    - data/interim/books_with_categories.csv
+    - data/final/tagged_description.txt
+    outs:
+    - data/final/books_with_emotions.csv
 
 
