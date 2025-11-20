@@ -1,0 +1,7 @@
+stages:
+  data_preprocessing:
+    cmd: uv run src/data/data_preprocessing.py
+    deps: 
+    - data/raw/books.csv
+
+

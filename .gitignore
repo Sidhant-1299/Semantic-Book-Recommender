@@ -12,3 +12,6 @@ wheels/
 .env
 
 /chroma_book_db
+
+.dvc
+.dvcignore

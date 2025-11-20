@@ -1,0 +1,9 @@
+schema: '2.0'
+stages:
+  data_preprocessing:
+    cmd: uv run src/data/data_preprocessing.py
+    deps:
+    - path: data/raw/books.csv
+      hash: md5
+      md5: fb986e694176649505eec4a383b8a3eb
+      size: 4142211
