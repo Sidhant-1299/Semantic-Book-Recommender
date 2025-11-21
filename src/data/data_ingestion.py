@@ -20,7 +20,7 @@ CURRENT_YEAR = time.localtime().tm_year
 def ingest_data():
     """Load raw book data from CSV file."""
     try:
-        file_path = '../data/raw/books.csv'
+        file_path = 'data/raw/books.csv'
         books = pd.read_csv(file_path)
         return books
     
@@ -35,8 +35,8 @@ def basic_preprocessing(books):
         if books.empty:
             raise ValueError("Books dataset empty")  # Return empty DataFrame if ingestion failed
 
-        books["missing_description"] = np.where(books["description"].ina(),1,0)
-        books["age_of_book"] = CURRENT_YEAR - books["publication_year"]
+        books["missing_description"] = np.where(books["description"].isna(),1,0)
+        books["age_of_book"] = CURRENT_YEAR - books["published_year"]
         return books
     except Exception as e:
         logger.error(f"An error occurred during preprocessing: {e}")
@@ -53,7 +53,7 @@ def remove_null_observations(books):
             ~(books['description'].isna())&
             ~(books['num_pages'].isna())&
             ~(books['average_rating'].isna())&
-            ~(books['publication_year'].isna())
+            ~(books['published_year'].isna())
         ]
         return books
     
@@ -159,7 +159,7 @@ def init_zero_shot_classifier():
 def generate_predictions(sequence, classifier, categories):
     """Generate zero-shot classification predictions for a given sequence."""
     prediction = classifier(sequence, categories)
-    print(prediction)
+    # print(prediction)
     max_index = np.argmax(prediction["scores"])
     max_label = prediction["labels"][max_index]
     return max_label
@@ -212,7 +212,7 @@ def save_processed_data(books):
         if books.empty:
             raise ValueError("Books dataset empty")  # Return empty DataFrame if ingestion failed
 
-        output_path = '../data/interim/books_with_categories.csv'
+        output_path = 'data/interim/books_with_categories.csv'
         books.to_csv(output_path, index=False)
         logger.info(f"Processed data saved to {output_path}")
     except Exception as e:

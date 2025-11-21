@@ -8,10 +8,12 @@ dependencies = [
 "gradio",
 "dotenv",
 "pandas",
-"numpy",
+"numpy<2",
+"dvc",
 "langchain_chroma",
 "langchain_openai",
 "langchain_community",
-"transformers"
+"transformers",
+"torch < 2.3"
 ]
 

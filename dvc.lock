@@ -7,3 +7,15 @@ stages:
       hash: md5
       md5: fb986e694176649505eec4a383b8a3eb
       size: 4142211
+  data_ingestion:
+    cmd: uv run src/data/data_ingestion.py
+    deps:
+    - path: data/raw/books.csv
+      hash: md5
+      md5: fb986e694176649505eec4a383b8a3eb
+      size: 4142211
+    outs:
+    - path: data/interim/books_with_categories.csv
+      hash: md5
+      md5: a7724cdcb63ecb03c7f83c479f7805a7
+      size: 7223946
