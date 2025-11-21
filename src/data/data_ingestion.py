@@ -68,7 +68,7 @@ def cut_off_description_length(books, min_length=25):
         if books.empty:
             raise ValueError("Books dataset empty")  # Return empty DataFrame if ingestion failed
 
-        books['description_word_count'] = books['description'].str.strip().str.len()
+        books['description_word_count'] = books['description'].str.split().str.len()
         books = books[books['description_word_count'] >= min_length]
         return books
     except Exception as e:

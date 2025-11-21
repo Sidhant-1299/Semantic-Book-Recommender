@@ -5,8 +5,8 @@ stages:
     - data/raw/books.csv
     outs:
     - data/interim/books_with_categories.csv
-  data_preprocessing:
-    cmd: uv run src/data/data_preprocessing.py
+  data_tagger:
+    cmd: uv run src/data/data_tagger.py
     deps: 
     - data/interim/books_with_categories.csv
     outs:
