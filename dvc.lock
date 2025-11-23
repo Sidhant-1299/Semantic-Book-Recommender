@@ -31,3 +31,19 @@ stages:
       hash: md5
       md5: bb1e5de7f5401e241e43b2fe89fdfcfa
       size: 2607714
+  sentiment_analyzer:
+    cmd: uv run src/data/sentiment_analyzer.py
+    deps:
+    - path: data/final/tagged_description.txt
+      hash: md5
+      md5: bb1e5de7f5401e241e43b2fe89fdfcfa
+      size: 2607714
+    - path: data/interim/books_with_categories.csv
+      hash: md5
+      md5: 7279d702f77bf57d408c948185118702
+      size: 6560684
+    outs:
+    - path: data/final/books_with_emotions.csv
+      hash: md5
+      md5: 8df97dcb63132909059e27a1423440cd
+      size: 7274013
