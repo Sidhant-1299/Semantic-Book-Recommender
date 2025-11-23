@@ -1,10 +1,12 @@
 import numpy as np
 import pandas as pd
 import logging
-from transformers import pipeline
+from transformers import pipeline,AutoModelForSequenceClassification, AutoTokenizer
 from tqdm import tqdm
 import os
 import dotenv
+from safetensors.torch import save_file
+import torch
 
 dotenv.load_dotenv()
 
@@ -19,45 +21,61 @@ isbn = []
 emotions_scores = {label: [] for label in emotional_labels}
 
 
+def save_model_as_safetensors():
+    model_id = "j-hartmann/emotion-english-distilroberta-base"
+    local_dir = "models/emotion_model"
+
+    # Download the model and save it to the local directory
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    model = AutoModelForSequenceClassification.from_pretrained(model_id)
+
+    # Save the model using the safe_serialization=True argument
+    tokenizer.save_pretrained(local_dir)
+    model.save_pretrained(local_dir, safe_serialization=True)
+    print(f"Model saved locally to {local_dir}. It should contain 'model.safetensors'.")
+
+
 def load_model():
     """
-    Load a fine-tuned transformer model to classify the sentiment of book descriptions
-    using a safetensors file to avoid torch >=2.6 requirement.
+    Load the model from the local directory, enforcing safetensors loading 
+    and explicit CPU usage for Intel Mac.
     """
-
-    model_dir = "models/emotion_model"
-    model_id = "j-hartmann/emotion-english-distilroberta-base"
+    model_dir = "models/emotion_model"  # Must contain model.safetensors + tokenizer
+    device_to_use = "cpu"
 
     try:
-        # Download model if not already present
         if not os.path.exists(model_dir):
-            os.makedirs(model_dir, exist_ok=True)
-            logger.info(f"Downloading model {model_id} to {model_dir}...")
+            raise FileNotFoundError(
+                f"Model folder {model_dir} not found. "
+                "Please run Step A to download and convert the model."
+            )
 
-            # Download tokenizer and PyTorch model
-            tokenizer = AutoTokenizer.from_pretrained(model_id)
-            model = AutoModelForSequenceClassification.from_pretrained(model_id)
+        # Load tokenizer
+        tokenizer = AutoTokenizer.from_pretrained(model_dir)
+        
+        # Load model weights from safetensors
+        model = AutoModelForSequenceClassification.from_pretrained(
+            model_dir,
+            local_files_only=True,   # Ensure we only use local files
+            safe_serialization=True  # Force loading of safetensors
+        )
 
-            # Save tokenizer
-            tokenizer.save_pretrained(model_dir)
-
-            # Save weights as safetensors
-            save_file(model.state_dict(), os.path.join(model_dir, "model.safetensors"))
-            logger.info(f"Model converted to safetensors and saved at {model_dir}")
-
-        # Load model using pipeline
-        sentiment_model = pipeline(
+        # Load pipeline and pass the CPU device
+        classifier = pipeline(
             "text-classification",
-            model=model_dir,
-            tokenizer=model_dir,
+            model=model,
+            tokenizer=tokenizer,
+            device=device_to_use, # <-- Set to 'cpu' for Intel Mac
             top_k=None
         )
 
-        return sentiment_model
+        return classifier
 
     except Exception as e:
         logger.error(f"An error occurred during sentiment classification: {e}")
         raise e
+    
+
 
 def calculate_max_emotion_scores(predictions):
   per_emotion_scores = {label:[] for label in emotional_labels}
@@ -111,6 +129,7 @@ def main():
         logger.error(f"Error: The file was not found at path {file_path}.")
         raise  # raise exception if file not found
 
+    save_model_as_safetensors()
     classifier = load_model()
     emotions_df = predict_sentiments(books, classifier)
     merged_df = merge_sentiments(books, emotions_df)
