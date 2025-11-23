@@ -17,17 +17,17 @@ stages:
     outs:
     - path: data/interim/books_with_categories.csv
       hash: md5
-      md5: a7724cdcb63ecb03c7f83c479f7805a7
-      size: 7223946
+      md5: 7279d702f77bf57d408c948185118702
+      size: 6560684
   data_tagger:
     cmd: uv run src/data/data_tagger.py
     deps:
     - path: data/interim/books_with_categories.csv
       hash: md5
-      md5: a7724cdcb63ecb03c7f83c479f7805a7
-      size: 7223946
+      md5: 7279d702f77bf57d408c948185118702
+      size: 6560684
     outs:
     - path: data/final/tagged_description.txt
       hash: md5
-      md5: 8043ee7d5ba3f7ff97348387b873af8b
-      size: 2769352
+      md5: bb1e5de7f5401e241e43b2fe89fdfcfa
+      size: 2607714
