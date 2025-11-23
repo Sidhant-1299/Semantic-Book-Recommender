@@ -8,19 +8,27 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_chroma import Chroma
 
-
 load_dotenv()
 
-books = pd.read_csv('books_with_emotions.csv')
-books["large_thumbnail"] = books["thumbnail"]+ "&fife=w800"
-books["large_thumbnail"] = np.where(books["large_thumbnail"].isnull(), "cover-not-found.jpg", books["large_thumbnail"])
+data = "data/final/books_with_emotions.csv"
+books = pd.read_csv(data)
 
-raw_documents = TextLoader("tagged_description.txt").load()
+books["large_thumbnail"] = books["thumbnail"]+ "&fife=w800"
+default_cover = "src/assets/cover-not-found.jpg"
+books["large_thumbnail"] = np.where(books["large_thumbnail"].isnull(), default_cover, books["large_thumbnail"])
+
+document = "data/final/tagged_description.txt"
+raw_documents = TextLoader(document).load()
 text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_overlap = 0)
 documents = text_splitter.split_documents(raw_documents)
-db_books = Chroma.from_documents(documents,
-                                OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None)),
-                                persist_directory="chroma_book_db")
+
+embeddings = OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None))
+vector_store_path = Chroma(
+    embedding_function=embeddings,
+    persist_directory="./chroma_book_db"
+)
+
+db_books = Chroma.from_documents(documents)
 
 
 def retrieve_semantic_recommendations(
@@ -28,7 +36,7 @@ def retrieve_semantic_recommendations(
             category: str = None, 
             tone: str = None, 
             intial_top_k: int = 50, 
-            final_top_k: int = 16 
+            final_top_k: int = 24 
         ) -> pd.DataFrame:
 
     recs = db_books.similarity_search(query=query, k = intial_top_k)
@@ -100,7 +108,7 @@ with gr.Blocks(theme = gr.themes.Glass()) as dashboard:
     gr.Markdown("## Recommended Books:")
     gallery = gr.Gallery(label = "Book Recommendations",
                          columns = 8,
-                         rows=2)
+                         rows=3)
     
     recommend_button.click(fn=recommend_books,
                            inputs=[user_query, category_dropdown, tone_dropdown],

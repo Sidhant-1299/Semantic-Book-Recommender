@@ -16,6 +16,7 @@ dependencies = [
 "transformers",
 "torch<=2.2",
 "tqdm",
-"safetensors"
+"safetensors",
+"typer"
 ]
 
