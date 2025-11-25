@@ -108,31 +108,56 @@ def recommend_books(query: str, category: str, tone: str):
     return results
 
 
-categoris = ["All"] + sorted(books["simple_categories"].unique())
+categories = ["All"] + sorted(books["simple_categories"].unique())
 tone = ["All"] + ["Happy", "Surprising", "Angry", "Suspenseful", "Sad"]
 
-with gr.Blocks(theme = gr.themes.Glass()) as dashboard:
-    gr.Markdown("# Semantic Book Recommender")
 
-    with gr.Row():
-        user_query = gr.Textbox(label = "Enter a book title or description",
-                                 placeholder = "e.g., A thrilling mystery novel set in Victorian London...")
-        category_dropdown = gr.Dropdown(label = "Select Category",
-                                        choices = categoris,
-                                        value = "All")
-        tone_dropdown = gr.Dropdown(label = "Select Tone",
-                                    choices = tone,
-                                    value = "All")
-        recommend_button = gr.Button("Get Recommendations")
-    
-    gr.Markdown("## Recommended Books:")
-    gallery = gr.Gallery(label = "Book Recommendations",
-                         columns = 8,
-                         rows=3)
-    
-    recommend_button.click(fn=recommend_books,
-                           inputs=[user_query, category_dropdown, tone_dropdown],
-                           outputs=gallery)
-    
+with gr.Blocks(theme=gr.themes.Glass()) as dashboard:
+    gr.Markdown(
+        """
+        <h1 style="text-align:center; margin-bottom: 0.5rem;">Semantic Book Recommender</h1>
+        <p style="text-align:center; opacity: 0.7;">Search smarter, get deeper recommendations</p>
+        """
+    )
+
+    with gr.Group():
+        with gr.Column():
+            user_query = gr.Textbox(
+                label="Book title or description",
+                placeholder="e.g., A thrilling mystery in Victorian London...",
+                lines=2
+            )
+
+            with gr.Row():
+                category_dropdown = gr.Dropdown(
+                    label="Category",
+                    choices=categories,
+                    value="All"
+                )
+                tone_dropdown = gr.Dropdown(
+                    label="Tone",
+                    choices=tone,
+                    value="All"
+                )
+                recommend_button = gr.Button(
+                    "Recommend",
+                    variant="primary"
+                )
+
+    gr.Markdown("<h2 style='margin-top: 2rem;'>Recommended Books</h2>")
+
+    gallery = gr.Gallery(
+        label="Book Recommendations",
+        columns=4,
+        rows=2,
+        object_fit="contain"
+    )
+
+    recommend_button.click(
+        fn=recommend_books,
+        inputs=[user_query, category_dropdown, tone_dropdown],
+        outputs=gallery
+    )
+
 if __name__ == "__main__":
     dashboard.launch()
