@@ -10,6 +10,8 @@ from langchain_chroma import Chroma
 
 load_dotenv()
 
+persisent_vector_dir = "./chroma_book_db"
+
 data = "data/final/books_with_emotions.csv"
 books = pd.read_csv(data)
 
@@ -23,12 +25,30 @@ text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_ov
 documents = text_splitter.split_documents(raw_documents)
 
 embeddings = OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None))
-vector_store_path = Chroma(
-    embedding_function=embeddings,
-    persist_directory="./chroma_book_db"
-)
+# vector_store_path = Chroma(
+#     embedding_function=embeddings,
+#     persist_directory="./chroma_book_db"
+# )
 
-db_books = Chroma.from_documents(documents)
+# db_books = Chroma.from_documents(documents)
+
+#check if persistent directory exists
+if not os.path.isdir(persisent_vector_dir):
+    os.mkdir(persisent_vector_dir)
+
+# make chroma db if persisent vector dir is empty and perist it
+if not os.listdir(persisent_vector_dir):
+    vectordb = Chroma.from_documents(
+        documents=documents,
+        embedding =embeddings, 
+        persist_directory=persisent_vector_dir
+    )
+# if it is not empty use it
+else:
+    vectordb = Chroma(
+        persist_directory=persisent_vector_dir,
+        embedding_function = embeddings
+    )
 
 
 def retrieve_semantic_recommendations(
@@ -39,7 +59,7 @@ def retrieve_semantic_recommendations(
             final_top_k: int = 24 
         ) -> pd.DataFrame:
 
-    recs = db_books.similarity_search(query=query, k = intial_top_k)
+    recs = vectordb.similarity_search(query=query, k = intial_top_k)
     #get isbns of similar books
     books_list = [int(rec.page_content.split()[0].strip().replace(",","").replace('"','')) for rec in recs]
     book_recs = books[books["isbn13"].isin(books_list)].head(intial_top_k)
