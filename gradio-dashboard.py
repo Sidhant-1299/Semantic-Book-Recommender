@@ -112,16 +112,91 @@ categories = ["All"] + sorted(books["simple_categories"].unique())
 tone = ["All"] + ["Happy", "Surprising", "Angry", "Suspenseful", "Sad"]
 
 
-with gr.Blocks(theme=gr.themes.Glass()) as dashboard:
+def show_book_details(evt: gr.SelectData, items):
+    book = items[evt.index]
+    html = f"""
+    <div style="
+        padding: 18px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        margin-top: 20px;
+    ">
+        <h2 style="margin-top:0; color: #eee;">{book['label']}</h2>
+        <p style="font-size: 1rem; line-height: 1.55; opacity: 0.88;">
+            {book['description']}
+        </p>
+    </div>
+    """
+    return gr.update(value=html, visible=True)
+
+
+
+custom_css = """
+/* Remove the old card */
+.input-card {}
+
+/* Make the layout open and spaced */
+.input-section {
+    padding: 10px 4px;
+    margin-top: 10px;
+}
+
+/* Style the text input and dropdowns a bit */
+.gradio-container .gr-textbox, 
+.gradio-container .gr-dropdown {
+    border-radius: 10px !important;
+    background: rgba(255, 255, 255, 0.14) !important;
+    backdrop-filter: blur(14px);
+}
+
+/* Section Title */
+.center-text {
+    text-align: center;
+}
+
+.section-title {
+    margin-top: 30px;
+    font-size: 1.7rem;
+    font-weight: 600;
+}
+
+/* Custom primary button */
+.custom-btn {
+    background: linear-gradient(135deg, #6a5acd, #7b68ee);
+    color: white !important;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-weight: 600;
+    transition: 0.2s ease-in-out;
+    border: none;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+.custom-btn:hover {
+    background: linear-gradient(135deg, #7b68ee, #8a79ff);
+    transform: translateY(2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+.custom-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+"""
+
+with gr.Blocks(theme=gr.themes.Glass(), css=custom_css) as dashboard:
     gr.Markdown(
         """
-        <h1 style="text-align:center; margin-bottom: 0.5rem;">Semantic Book Recommender</h1>
-        <p style="text-align:center; opacity: 0.7;">Search smarter, get deeper recommendations</p>
+        <h1 class="center-text" style="margin-bottom: 0.3rem;">Semantic Book Recommender</h1>
+        <p class="center-text" style="opacity: 0.7;">Smart search powered by semantic embeddings</p>
         """
     )
 
     with gr.Group():
-        with gr.Column():
+        with gr.Column(elem_classes="input-card"):
             user_query = gr.Textbox(
                 label="Book title or description",
                 placeholder="e.g., A thrilling mystery in Victorian London...",
@@ -139,18 +214,16 @@ with gr.Blocks(theme=gr.themes.Glass()) as dashboard:
                     choices=tone,
                     value="All"
                 )
-                recommend_button = gr.Button(
-                    "Recommend",
-                    variant="primary"
-                )
+                recommend_button = gr.Button("Recommend", elem_classes="custom-btn")
 
-    gr.Markdown("<h2 style='margin-top: 2rem;'>Recommended Books</h2>")
+    gr.Markdown('<h2 class="section-title">Recommended Books</h2>')
 
     gallery = gr.Gallery(
         label="Book Recommendations",
         columns=4,
         rows=2,
-        object_fit="contain"
+        object_fit="contain",
+        height="auto"
     )
 
     recommend_button.click(
