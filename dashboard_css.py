@@ -30,7 +30,7 @@ modal_css = """
     flex-direction: column !important;
 
     /* Make the MODAL thinner */
-    max-width: 800px !important;
+    max-width: 700px !important;
     width: 90vw !important;
     margin: 0 auto !important;
 }
@@ -39,8 +39,6 @@ modal_css = """
 .modal-image-container {
     height: 65vh !important;
     max-height: 80vh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
     flex-shrink: 0 !important;
     margin-bottom: 16px !important;
 }
@@ -48,8 +46,8 @@ modal_css = """
 /* Image */
 .modal-image-container img {
     width: 100% !important;
-    height: auto !important;
-    object-fit: contain !important;
+    height: 100% !important;             /* FILL the container */
+    object-fit: cover !important;        /* crop tall images nicely */
 }
 
 /* Title padding */
