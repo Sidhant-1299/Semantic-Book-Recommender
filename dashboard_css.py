@@ -1,3 +1,74 @@
+modal_css = """
+/* Hide the default auto-generated close button */
+.modal-container .close {
+    display: none !important;
+}
+
+/* Now style your custom close button normally */
+#close-btn {
+    position: absolute !important;
+    top: 15px;
+    right: 15px;
+    z-index: 100;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#close-btn:hover {
+    background: white;
+    color: black;
+    border-color: white;
+}
+
+/* Modal card */
+.modal-body {
+    background-color: #181818 !important;
+    border-radius: 12px !important;
+    max-width: 500px !important;
+    width: 90vw !important;
+    max-height: 90vh !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+}
+
+/* Modal image */
+.modal-body img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Title & Description */
+.modal-body h2 {
+    padding: 20px;
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+}
+.modal-body p {
+    padding: 0 20px 20px 20px;
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    overflow-y: auto;
+    max-height: 200px;
+}
+"""
+
+
 custom_css = """
 /* --- GLOBAL THEME --- */
 body, .gradio-container { 
@@ -77,147 +148,4 @@ body, .gradio-container {
     z-index: 10;
 }
 
-/* --- MODAL FIXES --- */
-
-/* 1. The Backdrop */
-.modal {
-    background: rgba(0, 0, 0, 0.85) !important;
-    backdrop-filter: blur(8px) !important;
-    padding: 0 !important; /* Removes the gap issue */
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 2. Hide the DEFAULT close button (The small 'x') */
-/* We target any button that is NOT our custom close-btn */
-.modal > button:not(#close-btn) {
-    display: none !important;
-}
-
-/* 3. The Card Container (The visible part) */
-.modal-body { 
-    background-color: #181818 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-    border: 1px solid #333;
-    
-    /* Size Controls */
-    width: 500px !important;
-    max-width: 90vw !important;
-    max-height: 90vh !important;
-    
-    /* Layout */
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Ensures image corners stay rounded */
-    padding: 0 !important;
-    margin: 0 !important;
-    position: relative;
-}
-
-/* 4. Our Custom Floating Close Button */
-#close-btn {
-    position: absolute !important;
-    top: 15px;
-    right: 15px;
-    z-index: 10000; /* Top of everything */
-    background: rgba(0,0,0,0.6) !important;
-    color: white !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    border: 2px solid rgba(255,255,255,0.5) !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    box-shadow: none !important;
-}
-#close-btn:hover {
-    background: white !important;
-    color: black !important;
-    border-color: white !important;
-}
-.modal {
-    display: flex !important;
-    align-items: center;       /* Centers vertically */
-    justify-content: center;   /* Centers horizontally */
-    background: rgba(0, 0, 0, 0.8) !important; /* Darken background */
-    backdrop-filter: blur(5px) !important;     /* Blur background */
-    padding: 0 !important;     /* CRITICAL: Removes the gray gap */
-}
-
-/* 2. Hide the DUPLICATE Close Button */
-/* This finds the default button created by the library and hides it */
-.modal > button:not(#close-btn) {
-    display: none !important;
-}
-
-/* 3. The Card (The actual popup box) */
-.modal-body {
-    position: relative;        /* Allows us to float the close button inside */
-    background-color: #181818 !important; /* Netflix card gray */
-    width: 500px !important;   /* Fixed beautiful width */
-    max-width: 90vw !important; /* Responsive on mobile */
-    max-height: 90vh !important;
-    border-radius: 12px !important;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9) !important;
-    border: 1px solid #333;
-    overflow: hidden;          /* Keeps image corners rounded */
-    padding: 0 !important;     /* Image touches the edges */
-    display: flex;
-    flex-direction: column;
-}
-
-/* 4. The Custom Close Button (The 'X') */
-#close-btn {
-    position: absolute !important; /* Float it */
-    top: 15px;
-    right: 15px;
-    z-index: 100 !important;      /* Sit on top of the image */
-    
-    /* Styling */
-    background: rgba(0, 0, 0, 0.6) !important;
-    color: white !important;
-    border: 1px solid rgba(255,255,255,0.3) !important;
-    border-radius: 50% !important; /* Make it a circle */
-    width: 32px !important;
-    height: 32px !important;
-    min-width: unset !important;
-    font-size: 14px !important;
-    padding: 0 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#close-btn:hover {
-    background: white !important;
-    color: black !important;
-}
-
-/* 5. Content Styling */
-/* Force the image to cover the top area */
-.modal-body img {
-    width: 100%;
-    height: 300px; /* Fixed height for consistency */
-    object-fit: cover;
-    display: block;
-}
-
-/* Padding for the text below the image */
-.modal-body h2 {
-    padding: 20px 20px 5px 20px;
-    margin: 0;
-    font-size: 1.5rem;
-    color: white;
-}
-.modal-body p {
-    padding: 0 20px 20px 20px;
-    color: #ccc;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    max-height: 200px; /* Scroll if description is huge */
-    overflow-y: auto;
-}
-"""
+""" + modal_css
