@@ -1,12 +1,12 @@
 # Semantic Book Recommender
 
-Gradio-powered dashboard that serves up book recommendations based on semantic similarity and emotional tone. Descriptions are embedded with OpenAI, stored in a Chroma vector store, and surfaced through a simple web UI.
+A simple, interactive Gradio dashboard that recommends books based on meaning and mood. Each book’s description is embedded with OpenAI models, stored in a Chroma vector DB, and served through an easy web interface.
 
 ## Features
 - Semantic search over book descriptions using OpenAI embeddings and Chroma.
 - Filter by category and prioritize by emotional tone (happy, surprising, angry, suspenseful, sad).
 - Modal gallery that shows richer book details on click.
-- Docker-first workflow with a persistent volume for the vector database.
+- Docker workflow with a persistent volume for the vector database.
 
 ## Prerequisites
 - Docker
@@ -27,8 +27,9 @@ docker run \
   -v chroma_book_data:/app/chroma_book_db \
   semantic_book_recommender:1.0.0
 ```
+
 - Change the left side of `-p` to expose on a different host port.
-- The named volume `chroma_book_data` keeps embeddings across runs; remove it if you want a fresh index.
+- The named volume `chroma_book_data` keeps embeddings across runs; speeds up consecutive runs; remove it if you want a fresh index.
 - Ensure your `.env` file is in the same directory you run the command from (or provide an absolute path).
 
 ## Local development (optional)
@@ -46,4 +47,4 @@ python gradio_dashboard.py
 - `data/final/` — CSVs and text files used for embeddings and recommendations.
 
 ## License
-MIT License — see `LICENSE` for details.
+MIT License 
