@@ -1,10 +1,70 @@
 modal_css = """
-/* Hide the default auto-generated close button */
-.modal-container .close {
-    display: none !important;
+/* --- FULL SCREEN OVERLAY (The 'Container' must be full screen) --- */
+.modal-container {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.85) !important; 
+    display: flex !important;
+    align-items: center !important; /* Vertically center the modal-block */
+    justify-content: center !important; /* Horizontally center the modal-block */
+    z-index: 9999;
+    backdrop-filter: blur(6px);
+    transition: opacity 0.3s ease;
 }
 
-/* Now style your custom close button normally */
+/* Show modal */
+.modal-container.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- WRAPPER BLOCK: Shrinks to fit the inner content (modal-body) --- */
+.modal-block {
+    max-width: fit-content !important; 
+    max-height: fit-content !important;
+    width: fit-content !important;
+    height: fit-content !important;
+    
+    background: transparent !important; /* Color is now transparent/invisible */
+    padding: 0 !important; 
+    border: none !important; 
+    
+    overflow: hidden;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+}
+
+/* --- MODAL CARD (The 'Body' is the content you see) --- */
+.modal-body {
+    position: relative !important;
+    background-color: #181818 !important; /* Card Color */
+    border-radius: 12px !important;
+    
+    /* Define the size of the card itself */
+    max-width: 450px !important; /* Narrower for taller look */
+    width: 90vw !important; 
+    max-height: 90vh !important;
+    height: fit-content !important; 
+    
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 40px rgba(0,0,0,1);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+/* Animate modal open */
+.modal-container.active .modal-body {
+    transform: scale(1);
+}
+
+/* --- CLOSE BUTTON --- */
 #close-btn {
     position: absolute !important;
     top: 15px;
@@ -23,40 +83,30 @@ modal_css = """
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 #close-btn:hover {
     background: white;
     color: black;
     border-color: white;
 }
 
-/* Modal card */
-.modal-body {
-    background-color: #181818 !important;
-    border-radius: 12px !important;
-    max-width: 500px !important;
-    width: 90vw !important;
-    max-height: 90vh !important;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.9);
-}
-
-/* Modal image */
+/* --- IMAGE --- */
 .modal-body img {
     width: 100%;
-    height: 300px;
+    height: 350px; 
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+.modal-body img:hover {
+    transform: scale(1.05);
 }
 
-/* Title & Description */
+/* --- TITLE & DESCRIPTION --- */
 .modal-body h2 {
     padding: 20px;
     margin: 0;
     color: white;
     font-size: 1.5rem;
+    font-weight: 700;
 }
 .modal-body p {
     padding: 0 20px 20px 20px;
@@ -64,10 +114,14 @@ modal_css = """
     font-size: 0.95rem;
     line-height: 1.5;
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 300px; 
+}
+
+/* Hide default Gradio close button */
+.modal-container .close {
+    display: none !important;
 }
 """
-
 
 custom_css = """
 /* --- GLOBAL THEME --- */

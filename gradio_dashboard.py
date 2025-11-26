@@ -136,7 +136,7 @@ def show_book_details(evt: gr.SelectData):
         book_img_html,
         f"<h2>{book['label']}</h2>",
         f"<p>{book['description']}</p>",
-        gr.update(visible=True) # This command now goes to the MODAL, not the flag
+        gr.update(visible=True, elem_classes="active") # This command now goes to the MODAL, not the flag
     )
 
 with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
@@ -154,7 +154,7 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
             label = "Please enter a description of the book",
             placeholder="A thrilling mystery in Victorian London...", lines=1,)
         category_dropdown = gr.Dropdown(choices=categories, value="All", label = "Select a category")
-        tone_dropdown = gr.Dropdown(choices=tone, value="All", label = "Seledt an emotional tone")
+        tone_dropdown = gr.Dropdown(choices=tone, value="All", label = "Select an emotional tone")
         recommend_button = gr.Button("Recommend", elem_classes="custom-btn")
 
     gr.Markdown("<h2 style='margin-left:20px;'>Recommended Books</h2>")
@@ -170,7 +170,7 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
     # Inside your app code...
     with Modal(visible=False) as book_modal:
         # We give the close button an ID so we can float it with CSS
-        close_btn = gr.Button("✕", elem_id="close-btn") 
+        # close_btn = gr.Button("✕", elem_id="close-btn") 
         
         # We wrap the content in a generic Group/Column to act as our "Card"
         with gr.Column(elem_classes="modal-body"):
@@ -178,7 +178,7 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
             book_title = gr.HTML("")
             book_desc = gr.HTML("")
 
-        close_btn.click(lambda: gr.update(visible=False), None, book_modal)
+        # close_btn.click(lambda: gr.update(visible=False, elem_classes=""), None, book_modal)
 
     # Recommend button updates gallery
     recommend_button.click(
