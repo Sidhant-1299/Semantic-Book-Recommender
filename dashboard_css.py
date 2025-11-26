@@ -152,4 +152,12 @@ body, .gradio-container {
     z-index: 10;
 }
 
+.gr-gallery [data-testid="block-label"] {
+    display: none !important;
+}
+
+label:has(svg.feather-image) {
+    display: none !important;
+}
+
 """ + modal_css
