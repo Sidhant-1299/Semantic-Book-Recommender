@@ -1,127 +1,79 @@
+
 modal_css = """
-/* --- FULL SCREEN OVERLAY (The 'Container' must be full screen) --- */
+/* Center modal */
 .modal-container {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100vh !important;
-    background: rgba(0, 0, 0, 0.85) !important; 
     display: flex !important;
-    align-items: center !important; /* Vertically center the modal-block */
-    justify-content: center !important; /* Horizontally center the modal-block */
-    z-index: 9999;
-    backdrop-filter: blur(6px);
-    transition: opacity 0.3s ease;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
-/* Show modal */
-.modal-container.active {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-/* --- WRAPPER BLOCK: Shrinks to fit the inner content (modal-body) --- */
+/* Modal wrapper */
 .modal-block {
-    max-width: fit-content !important; 
-    max-height: fit-content !important;
-    width: fit-content !important;
-    height: fit-content !important;
-    
-    background: transparent !important; /* Color is now transparent/invisible */
-    padding: 0 !important; 
-    border: none !important; 
-    
-    overflow: hidden;
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    margin: 0 !important;
+    height: 85vh !important;
+    width: auto !important;
+}
+.modal-block.padded {
+    padding: 0 !important;
 }
 
-/* --- MODAL CARD (The 'Body' is the content you see) --- */
+/* Remove gradio default padding */
+.modal-body .padding {
+    padding: 0 !important;
+}
+
+/* Modal card */
 .modal-body {
-    position: relative !important;
-    background-color: #181818 !important; /* Card Color */
-    border-radius: 12px !important;
-    
-    /* Define the size of the card itself */
-    max-width: 450px !important; /* Narrower for taller look */
-    width: 90vw !important; 
     max-height: 90vh !important;
-    height: fit-content !important; 
-    
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 40px rgba(0,0,0,1);
-    transform: scale(0.8);
-    transition: transform 0.3s ease;
+    min-height: 80vh !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+
+    /* Make the MODAL thinner */
+    max-width: 800px !important;
+    width: 90vw !important;
+    margin: 0 auto !important;
 }
 
-/* Animate modal open */
-.modal-container.active .modal-body {
-    transform: scale(1);
+/* Scrollable image area */
+.modal-image-container {
+    height: 65vh !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 16px !important;
 }
 
-/* --- CLOSE BUTTON --- */
-#close-btn {
-    position: absolute !important;
-    top: 15px;
-    right: 15px;
-    z-index: 100;
-    background: rgba(0,0,0,0.6);
-    color: white;
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-#close-btn:hover {
-    background: white;
-    color: black;
-    border-color: white;
+/* Image */
+.modal-image-container img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
 }
 
-/* --- IMAGE --- */
-.modal-body img {
-    width: 100%;
-    height: 350px; 
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-.modal-body img:hover {
-    transform: scale(1.05);
-}
-
-/* --- TITLE & DESCRIPTION --- */
+/* Title padding */
 .modal-body h2 {
-    padding: 20px;
-    margin: 0;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
-.modal-body p {
-    padding: 0 20px 20px 20px;
-    color: #ccc;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    overflow-y: auto;
-    max-height: 300px; 
+    padding: 0 20px !important;
+    margin-bottom: 10px !important;
+    flex-shrink: 0 !important;
 }
 
-/* Hide default Gradio close button */
-.modal-container .close {
+/* Description padding */
+.modal-body p {
+    padding: 0 20px 20px !important;
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+}
+
+/* Hide default close button */
+.modal .close {
     display: none !important;
 }
+
 """
+
+
 
 custom_css = """
 /* --- GLOBAL THEME --- */

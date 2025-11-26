@@ -130,13 +130,13 @@ def show_book_details(evt: gr.SelectData):
     global last_recommendations
     
     book = last_recommendations[evt.index]
-    book_img_html = f'<img src="{book["image"]}" style="width:100%; border-radius: 10px; margin-bottom: 15px;">'
+    book_img_html = f'<div class="modal-image-container"><img src="{book["image"]}" /></div>'
     
     return (
         book_img_html,
         f"<h2>{book['label']}</h2>",
         f"<p>{book['description']}</p>",
-        gr.update(visible=True, elem_classes="active") # This command now goes to the MODAL, not the flag
+        gr.update(visible=True, elem_classes="modal-active") # This command now goes to the MODAL
     )
 
 with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
