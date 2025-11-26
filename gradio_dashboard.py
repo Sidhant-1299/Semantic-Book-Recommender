@@ -7,6 +7,8 @@ from langchain_community.document_loaders import TextLoader
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_chroma import Chroma
+from gradio_modal import Modal
+from dashboard_css import custom_css
 
 load_dotenv()
 
@@ -120,81 +122,29 @@ def recommend_books(query, category, tone):
 
     return results
 
+# ... imports and setup code remains the same ...
+
+# ... retrieve_semantic_recommendations and recommend_books remain the same ...
+
 def show_book_details(evt: gr.SelectData):
-    book = last_recommendations[evt.index]  # use the stored global data
-    html = f"""
-    <div class="modal">
-        <div class="modal-content">
-            <img src="{book['image']}" style="width:100%; border-radius: 10px; margin-bottom: 15px;">
-            <h2>{book['label']}</h2>
-            <p>{book['description']}</p>
-        </div>
-    </div>
-    """
-    return gr.update(value=html, visible=True)
-
-# Revolutionary CSS for full-width Netflix-style dashboard
-custom_css = """
-body { background-color: #111; color: #fff; font-family: 'Helvetica', sans-serif; }
-
-/* Header */
-.header { text-align: center; margin-bottom: 40px; }
-.header h1 { font-size: 3rem; margin: 0; }
-.header p { color: #ccc; font-size: 1.2rem; }
-
-/* Inputs */
-.inputs { display: flex; gap: 15px; justify-content: center; margin-bottom: 40px; }
-.gr-textbox, .gr-dropdown { border-radius: 6px !important; padding: 10px; background-color: #222 !important; color: #fff; }
-
-/* Button */
-.custom-btn {
-    background: #e50914 !important;
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-weight: bold;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.custom-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
-}
-
-/* Gallery as horizontal scroll row */
-.gr-gallery { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 20px; scroll-behavior: smooth; }
-.gr-gallery img { border-radius: 8px; height: 300px; transition: transform 0.2s, filter 0.2s; cursor: pointer; }
-.gr-gallery img:hover { transform: scale(1.1); filter: brightness(1.2); }
-
-/* Modal for book details */
-.modal {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-    max-width: 600px;
-    z-index: 9999;
-}
-.modal h2 { margin-top: 0; color: #fff; }
-.modal p { color: #ccc; line-height: 1.5; }
-
-/* Close modal button */
-.modal::after {
-    content: '✖';
-    position: absolute;
-    top: 10px; right: 15px;
-    cursor: pointer;
-    font-size: 1.2rem;
-}
-"""
+    global last_recommendations
+    
+    book = last_recommendations[evt.index]
+    book_img_html = f'<img src="{book["image"]}" style="width:100%; border-radius: 10px; margin-bottom: 15px;">'
+    
+    return (
+        book_img_html,
+        f"<h2>{book['label']}</h2>",
+        f"<p>{book['description']}</p>",
+        gr.update(visible=True) # This command now goes to the MODAL, not the flag
+    )
 
 with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
     gr.HTML(
         """
         <div class="header">
             <h1>Semantic Book Recommender</h1>
-            <p>Search smarter, Netflix-style</p>
+            <p>Search smarter</p>
         </div>
         """
     )
@@ -206,19 +156,43 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
         recommend_button = gr.Button("Recommend", elem_classes="custom-btn")
 
     gr.Markdown("<h2 style='margin-left:20px;'>Recommended Books</h2>")
-    gallery = gr.Gallery(columns=4, rows=1, object_fit="cover", height="auto", allow_preview=False)
-    book_detail_box = gr.HTML(visible=False)
+    gallery = gr.Gallery(
+        columns=4,
+        rows=1,
+        object_fit="cover",
+        height="auto",
+        allow_preview=False
+    )
 
+    # --- MODAL SECTION FIXED ---
+    with Modal(visible=False) as book_modal:
+        close_btn = gr.Button("Close")
+        
+        # We removed the modal_flag. We don't need it.
+        
+        book_img = gr.HTML("") 
+        book_title = gr.HTML("")
+        book_desc = gr.HTML("")
+
+        # FIX 1: The Close button must target the book_modal directly
+        close_btn.click(
+            lambda: gr.update(visible=False), 
+            None, 
+            book_modal 
+        )
+
+    # Recommend button updates gallery
     recommend_button.click(
         fn=recommend_books,
         inputs=[user_query, category_dropdown, tone_dropdown],
         outputs=gallery
     )
 
+    # FIX 2: The Gallery select event must target the book_modal directly
     gallery.select(
         fn=show_book_details,
-        inputs=[],
-        outputs=book_detail_box
+        inputs=None,
+        outputs=[book_img, book_title, book_desc, book_modal] 
     )
-
+    
 dashboard.launch()

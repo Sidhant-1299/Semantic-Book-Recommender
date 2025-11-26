@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-"gradio",
+"gradio==5.50.0",
 "dotenv",
 "pandas",
 "numpy",
@@ -17,6 +17,7 @@ dependencies = [
 "torch<=2.2",
 "tqdm",
 "safetensors",
-"typer"
+"typer",
+"gradio_modal"
 ]
 
