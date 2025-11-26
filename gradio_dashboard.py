@@ -150,9 +150,11 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
     )
 
     with gr.Row(elem_classes="inputs"):
-        user_query = gr.Textbox(placeholder="A thrilling mystery in Victorian London...", lines=1)
-        category_dropdown = gr.Dropdown(choices=categories, value="All")
-        tone_dropdown = gr.Dropdown(choices=tone, value="All")
+        user_query = gr.Textbox(
+            label = "Please enter a description of the book",
+            placeholder="A thrilling mystery in Victorian London...", lines=1,)
+        category_dropdown = gr.Dropdown(choices=categories, value="All", label = "Select a category")
+        tone_dropdown = gr.Dropdown(choices=tone, value="All", label = "Seledt an emotional tone")
         recommend_button = gr.Button("Recommend", elem_classes="custom-btn")
 
     gr.Markdown("<h2 style='margin-left:20px;'>Recommended Books</h2>")
@@ -165,21 +167,18 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
     )
 
     # --- MODAL SECTION FIXED ---
+    # Inside your app code...
     with Modal(visible=False) as book_modal:
-        close_btn = gr.Button("Close")
+        # We give the close button an ID so we can float it with CSS
+        close_btn = gr.Button("✕", elem_id="close-btn") 
         
-        # We removed the modal_flag. We don't need it.
-        
-        book_img = gr.HTML("") 
-        book_title = gr.HTML("")
-        book_desc = gr.HTML("")
+        # We wrap the content in a generic Group/Column to act as our "Card"
+        with gr.Column(elem_classes="modal-body"):
+            book_img = gr.HTML("") 
+            book_title = gr.HTML("")
+            book_desc = gr.HTML("")
 
-        # FIX 1: The Close button must target the book_modal directly
-        close_btn.click(
-            lambda: gr.update(visible=False), 
-            None, 
-            book_modal 
-        )
+        close_btn.click(lambda: gr.update(visible=False), None, book_modal)
 
     # Recommend button updates gallery
     recommend_button.click(
