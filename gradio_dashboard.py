@@ -8,7 +8,6 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_chroma import Chroma
 from gradio_modal import Modal
-from dashboard_css import custom_css
 
 load_dotenv()
 
@@ -97,7 +96,9 @@ def recommend_books(query, category, tone):
     for _, row in recommendations.iterrows():
         description = row['description']
         truncated_description = " ".join(description.split()[:30]) + "..."
-        authors_split = row['authors'].split(";")
+        # empty string if authors in NaN
+        authors_raw = row["authors"] if isinstance(row["authors"], str) else ""
+        authors_split = authors_raw.split(";")
         if len(authors_split) == 2:
             authors_str = f"{authors_split[0]} and {authors_split[1]}"
         elif len(authors_split) > 2:
