@@ -12,6 +12,7 @@ from gradio_modal import Modal
 load_dotenv()
 
 api_key = os.getenv('OPENAI_API_KEY',None)
+
 if not api_key:
     raise ValueError("OPENAI_API_KEY missing. Please add it in your env file")
 
@@ -29,7 +30,7 @@ raw_documents = TextLoader(document).load()
 text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_overlap = 0)
 documents = text_splitter.split_documents(raw_documents)
 
-embeddings = OpenAIEmbeddings(api_key)
+embeddings = OpenAIEmbeddings(api_key=api_key)
 
 
 #check if persistent directory exists
@@ -193,4 +194,4 @@ with gr.Blocks(theme=gr.themes.Base(), css=load_css()) as dashboard:
 
 
 if __name__ == "__main__":    
-    dashboard.launch()
+    dashboard.launch(server_name="0.0.0.0", server_port=7860)

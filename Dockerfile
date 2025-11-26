@@ -24,8 +24,8 @@ COPY --from=builder /wheels /wheels
 RUN pip install --no-cache /wheels/*
 
 # Copy  assets
-COPY src/assets /app/src/
-COPY data/final /app/data/
+COPY src/assets /app/src/assets/
+COPY data/final /app/data/final/
 COPY dashboard.css /app/
 COPY gradio_dashboard.py /app/
 
