@@ -11,6 +11,10 @@ from gradio_modal import Modal
 
 load_dotenv()
 
+api_key = os.getenv('OPENAI_API_KEY',None)
+if not api_key:
+    raise ValueError("OPENAI_API_KEY missing. Please add it in your env file")
+
 persisent_vector_dir = "./chroma_book_db"
 
 data = "data/final/books_with_emotions.csv"
@@ -25,7 +29,7 @@ raw_documents = TextLoader(document).load()
 text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_overlap = 0)
 documents = text_splitter.split_documents(raw_documents)
 
-embeddings = OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None))
+embeddings = OpenAIEmbeddings(api_key)
 
 
 #check if persistent directory exists
