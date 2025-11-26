@@ -1,79 +1,4 @@
 
-modal_css = """
-/* Center modal */
-.modal-container {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-/* Modal wrapper */
-.modal-block {
-    height: 85vh !important;
-    width: auto !important;
-}
-.modal-block.padded {
-    padding: 0 !important;
-}
-
-/* Remove gradio default padding */
-.modal-body .padding {
-    padding: 0 !important;
-}
-
-/* Modal card */
-.modal-body {
-    max-height: 90vh !important;
-    min-height: 80vh !important;
-    overflow: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-
-    /* Make the MODAL thinner */
-    max-width: 700px !important;
-    width: 90vw !important;
-    margin: 0 auto !important;
-}
-
-/* Scrollable image area */
-.modal-image-container {
-    height: 65vh !important;
-    max-height: 80vh !important;
-    flex-shrink: 0 !important;
-    margin-bottom: 16px !important;
-}
-
-/* Image */
-.modal-image-container img {
-    width: 100% !important;
-    height: 100% !important;             /* FILL the container */
-    object-fit: cover !important;        /* crop tall images nicely */
-}
-
-/* Title padding */
-.modal-body h2 {
-    padding: 0 20px !important;
-    margin-bottom: 10px !important;
-    flex-shrink: 0 !important;
-}
-
-/* Description padding */
-.modal-body p {
-    padding: 0 20px 20px !important;
-    flex-grow: 1 !important;
-    overflow-y: auto !important;
-}
-
-/* Hide default close button */
-.modal .close {
-    display: none !important;
-}
-
-"""
-
-
-
-custom_css = """
 /* --- GLOBAL THEME --- */
 body, .gradio-container { 
     background-color: #141414 !important; /* Netflix Black */
@@ -160,4 +85,74 @@ label:has(svg.feather-image) {
     display: none !important;
 }
 
-""" + modal_css
+
+/* Center modal */
+.modal-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Modal wrapper */
+.modal-block {
+    height: 85vh !important;
+    width: auto !important;
+}
+.modal-block.padded {
+    padding: 0 !important;
+}
+
+/* Remove gradio default padding */
+.modal-body .padding {
+    padding: 0 !important;
+}
+
+/* Modal card */
+.modal-body {
+    max-height: 90vh !important;
+    min-height: 80vh !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+
+    /* Make the MODAL thinner */
+    max-width: 700px !important;
+    width: 90vw !important;
+    margin: 0 auto !important;
+}
+
+/* Scrollable image area */
+.modal-image-container {
+    height: 65vh !important;
+    max-height: 80vh !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 16px !important;
+}
+
+/* Image */
+.modal-image-container img {
+    width: 100% !important;
+    height: 100% !important;             /* FILL the container */
+    object-fit: cover !important;        /* crop tall images nicely */
+}
+
+/* Title padding */
+.modal-body h2 {
+    padding: 0 20px !important;
+    margin-bottom: 10px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Description padding */
+.modal-body p {
+    padding: 0 20px 20px !important;
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+}
+
+/* Hide default close button */
+.modal .close {
+    display: none !important;
+}
+
+

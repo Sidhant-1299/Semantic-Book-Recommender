@@ -27,12 +27,7 @@ text_splitter = CharacterTextSplitter(separator = "\n", chunk_size = 1, chunk_ov
 documents = text_splitter.split_documents(raw_documents)
 
 embeddings = OpenAIEmbeddings(api_key = os.getenv('OPENAI_API_KEY',None))
-# vector_store_path = Chroma(
-#     embedding_function=embeddings,
-#     persist_directory="./chroma_book_db"
-# )
 
-# db_books = Chroma.from_documents(documents)
 
 #check if persistent directory exists
 if not os.path.isdir(persisent_vector_dir):
@@ -122,9 +117,12 @@ def recommend_books(query, category, tone):
 
     return results
 
-# ... imports and setup code remains the same ...
 
-# ... retrieve_semantic_recommendations and recommend_books remain the same ...
+def load_css(filename:str = 'dashboard.css'):
+    with open(filename, 'r') as rf:
+        css_content = rf.read()
+    return css_content
+
 
 def show_book_details(evt: gr.SelectData):
     global last_recommendations
@@ -139,7 +137,7 @@ def show_book_details(evt: gr.SelectData):
         gr.update(visible=True, elem_classes="modal-active") # This command now goes to the MODAL
     )
 
-with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
+with gr.Blocks(theme=gr.themes.Base(), css=load_css()) as dashboard:
     gr.HTML(
         """
         <div class="header">
@@ -166,19 +164,14 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
         allow_preview=False
     )
 
-    # --- MODAL SECTION FIXED ---
-    # Inside your app code...
     with Modal(visible=False) as book_modal:
-        # We give the close button an ID so we can float it with CSS
-        # close_btn = gr.Button("✕", elem_id="close-btn") 
-        
         # We wrap the content in a generic Group/Column to act as our "Card"
         with gr.Column(elem_classes="modal-body"):
             book_img = gr.HTML("") 
             book_title = gr.HTML("")
             book_desc = gr.HTML("")
 
-        # close_btn.click(lambda: gr.update(visible=False, elem_classes=""), None, book_modal)
+        
 
     # Recommend button updates gallery
     recommend_button.click(
@@ -187,11 +180,12 @@ with gr.Blocks(theme=gr.themes.Base(), css=custom_css) as dashboard:
         outputs=gallery
     )
 
-    # FIX 2: The Gallery select event must target the book_modal directly
     gallery.select(
         fn=show_book_details,
         inputs=None,
         outputs=[book_img, book_title, book_desc, book_modal] 
     )
-    
-dashboard.launch()
+
+
+if __name__ == "__main__":    
+    dashboard.launch()
